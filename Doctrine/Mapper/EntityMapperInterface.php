@@ -4,7 +4,7 @@ namespace FS\SolrBundle\Doctrine\Mapper;
 
 use FS\SolrBundle\Doctrine\Hydration\HydrationModes;
 use FS\SolrBundle\Doctrine\Mapper\Mapping\AbstractDocumentCommand;
-use Solarium\QueryType\Update\Query\Document\Document;
+use Solarium\QueryType\Update\Query\Document;
 
 interface EntityMapperInterface
 {

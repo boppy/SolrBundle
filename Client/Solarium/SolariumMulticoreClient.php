@@ -4,9 +4,8 @@ namespace FS\SolrBundle\Client\Solarium;
 
 use FS\SolrBundle\Doctrine\Mapper\MetaInformationInterface;
 use FS\SolrBundle\Query\DeleteDocumentQuery;
-use FS\SolrBundle\Query\FindByIdentifierQuery;
 use Solarium\Core\Query\QueryInterface;
-use Solarium\QueryType\Update\Query\Document\DocumentInterface;
+use Solarium\QueryType\Update\Query\Document;
 use \Solarium\Client;
 
 /**
@@ -28,10 +27,10 @@ class SolariumMulticoreClient
     }
 
     /**
-     * @param DocumentInterface $doc
+     * @param Document $doc
      * @param string            $index
      */
-    public function update(DocumentInterface $doc, $index)
+    public function update(Document $doc, $index)
     {
         $update = $this->solariumClient->createUpdate();
         $update->addDocument($doc);
@@ -41,10 +40,10 @@ class SolariumMulticoreClient
     }
 
     /**
-     * @param DocumentInterface $document
+     * @param Document $document
      * @param string            $index
      */
-    public function delete(DocumentInterface $document, $index)
+    public function delete(Document $document, $index)
     {
         $documentFields = $document->getFields();
         $documentKey = $documentFields[MetaInformationInterface::DOCUMENT_KEY_FIELD_NAME];

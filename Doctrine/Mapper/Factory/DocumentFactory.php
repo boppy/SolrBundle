@@ -48,7 +48,7 @@ class DocumentFactory
             $documentId = $metaInformation->getDocumentName() . '_' . Uuid::uuid1()->toString();
         }
 
-        $document = new Document();
+        $document = new Query\Document();
         $document->setKey(MetaInformationInterface::DOCUMENT_KEY_FIELD_NAME, $documentId);
 
         $document->setBoost($metaInformation->getBoost());
