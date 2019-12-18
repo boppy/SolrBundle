@@ -8,10 +8,8 @@ This Bundle provides a simple API to index and query a Solr Index.
 
 ## Installation
 
-Installation is a quick (I promise!) 3 step process:
-
 1. Download SolrBundle
-2. Enable the Bundle (When not using Symfony Flex)
+2. Enable the Bundle
 3. Configure the SolrBundle
 4. configure your entity
 
@@ -20,10 +18,11 @@ Installation is a quick (I promise!) 3 step process:
 This bundle is available on Packagist. You can install it using Composer:
 
 ```bash
-$ composer require floriansemm/solr-bundle
+$ composer require maxgr0/solr-bundle
 ```
 
-### Step 2: Enable the bundle (when not using Symfony Flex)
+### Step 2: Enable the bundle
+When using Symfony Flex, you can skip this step. 
 
 Next, enable the bundle in the kernel:
 
