@@ -51,7 +51,7 @@ class DocumentFactory
         $document = new Query\Document();
         $document->setKey(MetaInformationInterface::DOCUMENT_KEY_FIELD_NAME, $documentId);
 
-        $document->setBoost($metaInformation->getBoost());
+        $document->setBoost(floatval($metaInformation->getBoost()));
 
         foreach ($fields as $field) {
             if (!$field instanceof Field) {

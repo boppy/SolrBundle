@@ -95,7 +95,7 @@ interface MetaInformationInterface
     /**
      * The document boost value
      *
-     * @return number
+     * @return float
      */
     public function getBoost();
 
