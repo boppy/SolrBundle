@@ -1,11 +1,8 @@
 SolrBundle
 ==========
-[![Build Status](https://secure.travis-ci.org/floriansemm/SolrBundle.png?branch=master)](http://travis-ci.org/floriansemm/SolrBundle) 
-[![Latest Stable Version](https://poser.pugx.org/floriansemm/solr-bundle/v/stable.svg)](https://packagist.org/packages/floriansemm/solr-bundle)
-[![Total Downloads](https://poser.pugx.org/floriansemm/solr-bundle/downloads.svg)](https://packagist.org/packages/floriansemm/solr-bundle)
-
 Introduction
 ------------
+Forked from floriansemm/solr-bundle to integrate with Solarium 5, Symfony > 4.3
 
 This Bundle provides a simple API to index and query a Solr Index. 
 
@@ -14,7 +11,7 @@ This Bundle provides a simple API to index and query a Solr Index.
 Installation is a quick (I promise!) 3 step process:
 
 1. Download SolrBundle
-2. Enable the Bundle
+2. Enable the Bundle (When not using Symfony Flex)
 3. Configure the SolrBundle
 4. configure your entity
 
@@ -26,7 +23,7 @@ This bundle is available on Packagist. You can install it using Composer:
 $ composer require floriansemm/solr-bundle
 ```
 
-### Step 2: Enable the bundle
+### Step 2: Enable the bundle (when not using Symfony Flex)
 
 Next, enable the bundle in the kernel:
 
@@ -48,14 +45,14 @@ public function registerBundles()
 Finally, configure the bundle:
 
 ``` yaml
-# app/config/config.yml
+# app/config/fs_solr.yml
 fs_solr:
     endpoints:
         core0:
             schema: http
             host: host
             port: 8983
-            path: /solr/core0
+            path: /
             core: corename
             timeout: 5
 ```
@@ -65,11 +62,11 @@ Default values will be used for any option left out.
 #### With DSN
 
 ``` yaml
-# app/config/config.yml
+# app/config/fs_solr.yml
 fs_solr:
     endpoints:
         core0:
-            dsn: http://host:8983/solr
+            dsn: http://host:8983/
             core: core0
             timeout: 5
 ```

@@ -8,7 +8,7 @@ use FS\SolrBundle\Doctrine\Mapper\MetaInformationFactory;
 use FS\SolrBundle\Doctrine\Mapper\MetaInformationInterface;
 use FS\SolrBundle\Doctrine\Mapper\SolrMappingException;
 use Ramsey\Uuid\Uuid;
-use Solarium\QueryType\Update\Query\Document\Document;
+use Solarium\QueryType\Update\Query;
 
 class DocumentFactory
 {

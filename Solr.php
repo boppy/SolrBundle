@@ -11,8 +11,9 @@ use FS\SolrBundle\Helper\DocumentHelper;
 use FS\SolrBundle\Query\QueryBuilder;
 use FS\SolrBundle\Query\QueryBuilderInterface;
 use FS\SolrBundle\Repository\RepositoryInterface;
+use Solarium\Core\Client\Endpoint;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
-use Solarium\QueryType\Update\Query\Document\Document;
+//use Solarium\QueryType\Update\Query\Document\Document;
 use Solarium\QueryType\Select\Query\Query as SolariumQuery;
 use FS\SolrBundle\Doctrine\Mapper\EntityMapper;
 use FS\SolrBundle\Doctrine\Mapper\MetaInformationFactory;
@@ -23,7 +24,7 @@ use FS\SolrBundle\Query\AbstractQuery;
 use FS\SolrBundle\Query\SolrQuery;
 use FS\SolrBundle\Repository\Repository;
 use Solarium\Client;
-use Solarium\QueryType\Update\Query\Document\DocumentInterface;
+use Solarium\QueryType\Update\Query;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -361,9 +362,10 @@ class Solr implements SolrInterface
             if ($core == '') {
                 $core = null;
             }
-            $buffer->setEndpoint($core);
+            $endpoint = $this->solrClientCore->getEndpoint($core);
+            $buffer->setEndpoint($endpoint);
 
-            $buffer->commit();
+            $buffer->commit(false);
         }
     }
 
@@ -395,7 +397,7 @@ class Solr implements SolrInterface
      *
      * @return DocumentInterface
      */
-    private function toDocument(MetaInformationInterface $metaInformation): DocumentInterface
+    private function toDocument(MetaInformationInterface $metaInformation): Query\Document
     {
         $doc = $this->entityMapper->toDocument($metaInformation);
 
