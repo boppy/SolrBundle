@@ -4,13 +4,25 @@ namespace FS\SolrBundle\Command;
 
 use FS\SolrBundle\Doctrine\Mapper\MetaInformationInterface;
 use FS\SolrBundle\Doctrine\Mapper\SolrMappingException;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ShowSchemaCommand extends ContainerAwareCommand
+class ShowSchemaCommand extends Command
 {
+    protected $namespaces;
+    protected $metaInformationFactory;
+
+    public function __construct(\FS\SolrBundle\Doctrine\ClassnameResolver\KnownNamespaceAliases $namespaces,
+                                \FS\SolrBundle\Doctrine\Mapper\MetaInformationFactory $metaInformationFactory)
+    {
+        $this->namespaces = $namespaces;
+        $this->metaInformationFactory = $metaInformationFactory;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -25,12 +37,9 @@ class ShowSchemaCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $namespaces = $this->getContainer()->get('solr.doctrine.classnameresolver.known_entity_namespaces');
-        $metaInformationFactory = $this->getContainer()->get('solr.meta.information.factory');
-
-        foreach ($namespaces->getEntityClassnames() as $classname) {
+        foreach ($this->namespaces->getEntityClassnames() as $classname) {
             try {
-                $metaInformation = $metaInformationFactory->loadInformation($classname);
+                $metaInformation = $this->metaInformationFactory->loadInformation($classname);
 
                 if ($metaInformation->isNested()) {
                     continue;
@@ -88,6 +97,7 @@ class ShowSchemaCommand extends ContainerAwareCommand
 
         }
 
+        return 0;
     }
 
     /**
