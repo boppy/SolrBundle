@@ -68,7 +68,7 @@ class ShowSchemaCommand extends Command
 
             $nestedFields = $this->getNestedFields($metaInformation);
             if (count($nestedFields) == 0) {
-                return;
+                continue;
             }
 
             $output->writeln(sprintf('Fields <comment>(%s)</comment> with nested documents', count($nestedFields)));
