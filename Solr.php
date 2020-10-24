@@ -353,17 +353,25 @@ class Solr implements SolrInterface
 
             $doc = $this->toDocument($metaInformations);
 
-            $allDocuments[$metaInformations->getIndex()][] = $doc;
+            $index = $metaInformations->getIndex();
+            if ('*' == $index) {
+                foreach ($this->solrClientCore->getEndpoints() as $endpointName => $endpoint) {
+                    $allDocuments[$endpointName][] = $doc;
+                }
+            }
+            else {
+                $allDocuments[$index][] = $doc;
+            }
         }
 
         foreach ($allDocuments as $core => $documents) {
-            $buffer->addDocuments($documents);
-
             if ($core == '') {
                 $core = null;
             }
             $endpoint = $this->solrClientCore->getEndpoint($core);
             $buffer->setEndpoint($endpoint);
+
+            $buffer->addDocuments($documents);
 
             $buffer->commit(false);
         }
