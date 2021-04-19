@@ -90,14 +90,21 @@
         </service>
 
         <service id="solr.command.clear_index_command" class="FS\SolrBundle\Command\ClearIndexCommand">
+            <argument id="solr.client" type="service"/>
             <tag name="console.command"/>
         </service>
 
         <service id="solr.command.show_schema_command" class="FS\SolrBundle\Command\ShowSchemaCommand">
+            <argument id="solr.doctrine.classnameresolver.known_entity_namespaces" type="service"/>
+            <argument id="solr.meta.information.factory" type="service"/>
             <tag name="console.command"/>
         </service>
 
         <service id="solr.command.synchronize_index_command" class="FS\SolrBundle\Command\SynchronizeIndexCommand">
+            <argument id="solr.client" type="service"/>
+            <argument id="solr.doctrine.classnameresolver.known_entity_namespaces" type="service"/>
+            <argument id="solr.meta.information.factory" type="service"/>
+            <argument id="service_container" type="service" />
             <tag name="console.command"/>
         </service>
     </services>

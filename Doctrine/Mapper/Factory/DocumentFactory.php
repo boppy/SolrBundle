@@ -61,10 +61,15 @@ class DocumentFactory
             $fieldValue = $field->getValue();
             if (($fieldValue instanceof Collection || is_array($fieldValue)) && $field->nestedClass) {
                 $this->mapCollectionField($document, $field, $metaInformation->getEntity());
-            } else if (is_object($fieldValue) && $field->nestedClass) { // index sinsgle object as nested child-document
+            } else if (is_object($fieldValue) && $field->nestedClass) { // index single object as nested child-document
                 $document->addField('_childDocuments_', [$this->objectToDocument($fieldValue)], $field->getBoost());
             } else if (is_object($fieldValue) && !$field->nestedClass) { // index object as "flat" string, call getter
-                $document->addField($field->getNameWithAlias(), $this->mapObjectField($field), $field->getBoost());
+                if ($fieldValue instanceof Collection || is_array($fieldValue)) {
+                    $document->addField($field->getNameWithAlias(), $this->mapCollection($field, $metaInformation->getClassName()), $field->getBoost());
+                }
+                else {
+                    $document->addField($field->getNameWithAlias(), $this->mapObjectField($field), $field->getBoost());
+                }
             } else if ($field->getter && $fieldValue) { // call getter to transform data (json to array, etc.)
                 $getterValue = $this->callGetterMethod($metaInformation->getEntity(), $field->getGetterName());
                 $document->addField($field->getNameWithAlias(), $getterValue, $field->getBoost());
@@ -94,7 +99,7 @@ class DocumentFactory
         if (empty($getter)) {
             throw new SolrMappingException(sprintf('Please configure a getter for property "%s" in class "%s"', $field->name, get_class($value)));
         }
-        
+
         $getterReturnValue = $this->callGetterMethod($value, $getter);
 
         if (is_object($getterReturnValue)) {
@@ -138,8 +143,9 @@ class DocumentFactory
     }
 
     /**
+     * @param Document $document
      * @param Field  $field
-     * @param string $sourceTargetClass
+     * @param string $sourceTargetObject
      *
      * @return array
      *
@@ -170,6 +176,38 @@ class DocumentFactory
             }
 
             $document->addField('_childDocuments_', $values, $field->getBoost());
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param Field  $field
+     * @param string $sourceTargetClass
+     *
+     * @return array
+     *
+     * @throws SolrMappingException if no getter method was found
+     */
+    private function mapCollection(Field $field, $sourceTargetClass)
+    {
+        /** @var Collection $value */
+        $value = $field->getValue();
+        $getter = $field->getGetterName();
+        if ($getter == '') {
+            throw new SolrMappingException(sprintf('No getter method for property "%s" configured in class "%s"', $field->name, $sourceTargetClass));
+        }
+
+        $values = array();
+        foreach ($value as $relatedObj) {
+            $getValue = $this->callGetterMethod($relatedObj, $getter);
+            if (is_array($getValue)) {
+                // flatten
+                $values = array_merge($values, $getValue);
+            }
+            else {
+                $values[] = $getValue;
+            }
         }
 
         return $values;
